@@ -1,0 +1,60 @@
+1. On BridgeGrid, change the value of discount and/or noise so that agent attempts to cross the bridge.
+
+a. Anything less than a value of .01 causes the agent to attempt a crossing.
+This is because the agent wants to minimize the risk of ending up in a
+-100 terminal state on accident as a result going in an unintended direction.
+The lower the noise value, the more confident that we go in the direction
+we actually intend, thus favoring us to successfully cross the bridge and not
+accidentally fall into the negative payoff grids.
+
+b. There is no discount value that causes the agent to attempt a crossing
+because changing the discount value does not affect the actions that the agent
+chooses on this grid, mainly the values associated with the states. Although
+increasing the discount value (to really close to 1, like 0.99) would allow the
+agent to increasingly foresee the higher future reward, with the current default
+noise parameter, changing discount is not "enough" to make the agent cross
+because the risk of falling out of the path is still quite high from the
+default noise value.
+
+c. Decreasing the noise is effective in causing the agent to cross the bridge,
+as the agent is more likely to travel towards the reward state when there is
+less risk of accidental -100 reward as result of noise. For this specific
+grid space, increasing and decreasing discount value is less effective on the
+actions of the agent since there is only one exit, so the agent is not really
+deciding between multiple terminal states for immediate or distant rewards.
+However, we still see that a higher discount value means that future reward
+receives greater importance, so that the agent could try crossing
+despite the risk of cliff.
+
+2. On DiscountGrid, for each task, give an assignment of discount, noise, and livingReward (or not possible) if it can't be done.
+
+a. python3 gridworld.py -i 100 -g DiscountGrid --discount 0.36 --noise 0.02 --livingReward -0.1
+
+b. python3 gridworld.py -i 100 -g DiscountGrid --discount 0.3 --noise 0.05 --livingReward 0.0
+
+c. python3 gridworld.py -i 100 -g DiscountGrid --discount 0.9 --noise 0.05 --livingReward 0.0
+
+d. python3 gridworld.py -i 100 -g DiscountGrid --discount 0.9 --noise 0.2 --livingReward 0.0
+
+e. python3 gridworld.py -i 100 -g DiscountGrid --discount 0.9 --noise 0.7 --livingReward 0.0
+
+3. Describe the grid world instance you added to Grids.py.
+   What interesting decisions does it force the agent to make?
+   How are those decisions affected by the agent's parameters?
+
+   Our grid world implementation offers the agent a couple of different reward
+   states: the lowest value reward is immediately above it (+1), the highest
+   value reward (+30) is obstructed by a wall, a barrier of negative payoffs,
+   and another reward on its path (+20) of lesser value. We wanted to explore
+   the ways in which our agent would balance long term and short term reward
+   when faced with several options.
+
+   The agent is most likely to take the short term reward when discount value is
+   very low. At 0.1 discount and default noise and livingReward, the agent
+   takes the (+1) reward.
+
+   The agent is most likely to take longer term rewards when discount is high
+   (~0.9 discount). The decision between the +20 and +30 reward takes noise
+   into account because the +30 reward is lined with negative terminal states.
+   At 0.9 discount and 0.2 noise, the agent chooses the +20 reward, and at 0.9
+   discount and 0.01 noise, the agent chooses the +30 reward.
